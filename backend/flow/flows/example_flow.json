@@ -1,0 +1,14 @@
+{
+	"ID": "exampleFlow",
+	"Name": "Example Flow",
+	"InstanceID": "instance1",
+	"Steps": [
+		{
+			"ID": "step1",
+			"Action": "template",
+			"Params": {
+				"template": "What do you think about it? {{.Instance1}} in regards to {{.UserQuery}}"
+			}
+		}
+	]
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Dashboard</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Main Dashboard</h1>
+        <button id="create-instance-btn">Create Instance</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Instance ID</th>
+                    <th>Status</th>
+                    <th>URL</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="instance-list">
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Create Instance Section -->
+    <div id="create-instance-section" style="display: none;">
+        <h1>Create Instance</h1>
+        <form id="create-instance-form">
+            <label for="url">URL:</label>
+            <input type="text" id="url" name="url" required>
+            <button type="button" id="launch-url-btn">Launch URL</button>
+            <button type="submit">Create</button>
+        </form>
+    </div>
+
+    <!-- Control Instance Section -->
+    <div id="control-instance-section" style="display: none;">
+        <h1>Control Instance</h1>
+        <form id="control-instance-form">
+            <label for="headless-mode">Headless Mode:</label>
+            <input type="checkbox" id="headless-mode" name="headless-mode">
+            <br>
+            <label for="disable-gpu">Disable GPU:</label>
+            <input type="checkbox" id="disable-gpu" name="disable-gpu">
+            <br>
+            <button type="button" id="start-stop-btn">Start/Stop</button>
+            <button type="button" id="import-cookie-btn">Import Cookie</button>
+            <button type="button" id="export-cookie-btn">Export Cookie</button>
+            <button type="button" id="set-instance-details-btn">Set Instance Details</button>
+        </form>
+    </div>
+
+    <!-- Debug Instance Section -->
+    <div id="debug-instance-section" style="display: none;">
+        <h1>Debug Instance</h1>
+        <img id="screenshot" src="" alt="Instance Screenshot">
+        <button id="refresh-screenshot-btn">Refresh Screenshot</button>
+    </div>
+
+    <!-- Flow Manager Section -->
+    <div id="flow-manager-section" style="display: none;">
+        <h1>Flow Manager</h1>
+        <div id="flow-list"></div>
+        <button id="create-flow-btn">Create Flow</button>
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>

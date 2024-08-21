@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Instance</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Create Instance</h1>
+        <form id="create-instance-form">
+            <label for="url">URL:</label>
+            <input type="text" id="url" name="url" required>
+            <button type="button" id="launch-url-btn">Launch URL</button>
+            <button type="submit">Create</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('launch-url-btn').addEventListener('click', () => {
+            const url = document.getElementById('url').value;
+            if (url) {
+                window.open(url, '_blank');
+            }
+        });
+
+        document.getElementById('create-instance-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('url').value;
+            if (url) {
+                try {
+                    const response = await fetch('/api/v1/instances', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ URL: url })
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    window.location.href = '/';
+                } catch (error) {
+                    console.error('Error creating instance:', error);
+                    alert('Failed to create instance. Please try again.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debug Instance</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Debug Instance</h1>
+        <img id="screenshot" src="" alt="Instance Screenshot">
+        <button id="refresh-screenshot-btn">Refresh Screenshot</button>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const instanceID = urlParams.get('id');
+
+        async function loadScreenshot() {
+            try {
+                const response = await fetch(`/api/v1/instances/${instanceID}/screenshot`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const blob = await response.blob();
+                const screenshot = document.getElementById('screenshot');
+                screenshot.src = URL.createObjectURL(blob);
+            } catch (error) {
+                console.error('Error loading screenshot:', error);
+                alert('Failed to load screenshot. Please try again.');
+            }
+        }
+
+        document.getElementById('refresh-screenshot-btn').addEventListener('click', loadScreenshot);
+
+        loadScreenshot();
+    </script>
+</body>
+</html>

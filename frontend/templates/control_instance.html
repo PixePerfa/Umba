@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Control Instance</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Control Instance</h1>
+        <form id="control-instance-form">
+            <label for="headless-mode">Headless Mode:</label>
+            <input type="checkbox" id="headless-mode" name="headless-mode">
+            <br>
+            <label for="disable-gpu">Disable GPU:</label>
+            <input type="checkbox" id="disable-gpu" name="disable-gpu">
+            <br>
+            <button type="button" id="start-stop-btn">Start/Stop</button>
+            <button type="button" id="import-cookie-btn">Import Cookie</button>
+            <button type="button" id="export-cookie-btn">Export Cookie</button>
+            <button type="button" id="set-instance-details-btn">Set Instance Details</button>
+        </form>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const instanceID = urlParams.get('id');
+
+        document.getElementById('start-stop-btn').addEventListener('click', async () => {
+            const status = document.getElementById('start-stop-btn').textContent === 'Start' ? 'running' : 'stopped';
+            try {
+                const response = await fetch(`/api/v1/instances/${instanceID}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ Status: status })
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                document.getElementById('start-stop-btn').textContent = status === 'running' ? 'Stop' : 'Start';
+            } catch (error) {
+                console.error('Error updating instance status:', error);
+                alert('Failed to update instance status. Please try again.');
+            }
+        });
+
+        document.getElementById('set-instance-details-btn').addEventListener('click', () => {
+            const url = `/set_instance_details.html?id=${instanceID}`;
+            window.open(url, '_blank');
+        });
+    </script>
+</body>
+</html>

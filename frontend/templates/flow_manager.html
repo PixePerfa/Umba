@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flow Manager</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Flow Manager</h1>
+        <div id="flow-list"></div>
+        <button id="create-flow-btn">Create Flow</button>
+    </div>
+    <script>
+        document.getElementById('create-flow-btn').addEventListener('click', async () => {
+            const name = prompt('Enter flow name:');
+            if (name) {
+                try {
+                    const response = await fetch('/api/v1/flows', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ Name: name })
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    await loadFlows();
+                } catch (error) {
+                    console.error('Error creating flow:', error);
+                    alert('Failed to create flow. Please try again.');
+                }
+            }
+        });
+
+        async function loadFlows() {
+            try {
+                const response = await fetch('/api/v1/flows');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const flows = await response.json();
+                const flowList = document.getElementById('flow-list');
+                flowList.innerHTML = '';
+                flows.forEach(flow => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <h2>${flow.Name}</h2>
+                        <button class="execute-flow-btn" data-id="${flow.ID}">Execute Flow</button>
+                        <button class="delete-flow-btn" data-id="${flow.ID}">Delete Flow</button>
+                    `;
+                    flowList.appendChild(div);
+                });
+                document.querySelectorAll('.execute-flow-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const flowID = btn.getAttribute('data-id');
+                        try {
+                            const response = await fetch(`/api/v1/flows/${flowID}/execute`, {
+                                method: 'POST'
+                            });
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            alert('Flow executed');
+                        } catch (error) {
+                            console.error('Error executing flow:', error);
+                            alert('Failed to execute flow. Please try again.');
+                        }
+                    });
+                });
+                document.querySelectorAll('.delete-flow-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const flowID = btn.getAttribute('data-id');
+                        try {
+                            const response = await fetch(`/api/v1/flows/${flowID}`, {
+                                method: 'DELETE'
+                            });
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            await loadFlows();
+                        } catch (error) {
+                            console.error('Error deleting flow:', error);
+                            alert('Failed to delete flow. Please try again.');
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading flows:', error);
+                alert('Failed to load flows. Please try again.');
+            }
+        }
+
+        loadFlows();
+    </script>
+</body>
+</html>
